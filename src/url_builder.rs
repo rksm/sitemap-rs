@@ -1,6 +1,6 @@
 use crate::image::Image;
 use crate::news::News;
-use crate::url::{ChangeFrequency, Url};
+use crate::url::{Alternate, ChangeFrequency, Url};
 use crate::url_error::UrlError;
 use crate::video::Video;
 use chrono::{DateTime, FixedOffset};
@@ -53,6 +53,11 @@ pub struct UrlBuilder {
 
     /// News associated with this URL.
     pub news: Option<News>,
+
+    /// Language Alternates for this URL.
+    ///
+    /// Alternates must not contain duplicate hreflang values.
+    pub alternates: Option<Vec<Alternate>>,
 }
 
 impl UrlBuilder {
@@ -66,6 +71,7 @@ impl UrlBuilder {
             images: None,
             videos: None,
             news: None,
+            alternates: None,
         }
     }
 
@@ -99,11 +105,31 @@ impl UrlBuilder {
         self
     }
 
+    pub fn alternates(&mut self, alternates: Vec<Alternate>) -> &mut Self {
+        self.alternates = Some(alternates);
+        self
+    }
+
+    pub fn push_alternate(&mut self, hreflang: impl ToString, href: impl ToString) -> &mut Self {
+        if self.alternates.is_none() {
+            self.alternates = Some(Vec::new());
+        }
+
+        if let Some(alternates) = &mut self.alternates {
+            alternates.push(Alternate {
+                hreflang: hreflang.to_string(),
+                href: href.to_string(),
+            });
+        }
+        self
+    }
+
     /// # Errors
     ///
     /// Will return `UrlError::PriorityTooLow` if `priority` is below `0.0`.
     /// Will return `UrlError::PriorityTooHigh` if `priority` is above `1.0`.
     /// Will return `UrlError::TooManyImages` if the length of `images` is above `1,000`.
+    /// Will return `UrlError::DuplicateAlternateHreflangs` if `alternates` contain duplicate `hreflang` values.
     pub fn build(&self) -> Result<Url, UrlError> {
         Url::new(
             self.location.clone(),
@@ -113,6 +139,7 @@ impl UrlBuilder {
             self.images.clone(),
             self.videos.clone(),
             self.news.clone(),
+            self.alternates.clone(),
         )
     }
 }
