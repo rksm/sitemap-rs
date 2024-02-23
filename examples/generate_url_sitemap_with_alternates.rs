@@ -13,7 +13,7 @@ fn main() {
      * In the following example both are used.
      */
     let urls: Vec<Url> = vec![Url::builder(String::from("https://www.example.com/"))
-        .last_modified(DateTime::from_utc(
+        .last_modified(DateTime::from_naive_utc_and_offset(
             NaiveDate::from_ymd_opt(2005, 1, 1)
                 .unwrap()
                 .and_hms_opt(0, 0, 0)

@@ -16,7 +16,6 @@ fn test_constructor_only_required_fields() {
         None,
         None,
         None,
-        None,
     );
     assert!(url_result.is_ok());
 }
@@ -32,7 +31,6 @@ fn test_constructor_all_normal_fields() {
         None,
         None,
         None,
-        None,
     );
     assert!(url_result.is_ok());
 }
@@ -44,7 +42,6 @@ fn test_constructor_priority_too_low() {
         Some(DateTime::from(Utc::now())),
         Some(ChangeFrequency::Weekly),
         Some(-1.0),
-        None,
         None,
         None,
         None,
@@ -73,7 +70,6 @@ fn test_constructor_priority_too_high() {
         Some(DateTime::from(Utc::now())),
         Some(ChangeFrequency::Weekly),
         Some(4.69),
-        None,
         None,
         None,
         None,
@@ -115,7 +111,6 @@ fn test_constructor_too_many_images() {
         None,
         None,
         None,
-        None,
     );
     match url_result {
         Ok(_) => panic!("Returned a URL!"),
@@ -152,7 +147,6 @@ fn test_constructor_duplicate_alternate_hreflangs() {
         None,
         None,
         Some(alternates),
-        None,
     );
     match url_result {
         Ok(_) => panic!("Returned a URL!"),

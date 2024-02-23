@@ -110,13 +110,16 @@ impl UrlBuilder {
         self
     }
 
-    pub fn push_alternate(&mut self, hreflang: String, href: String) -> &mut Self {
+    pub fn push_alternate(&mut self, hreflang: impl ToString, href: impl ToString) -> &mut Self {
         if self.alternates.is_none() {
             self.alternates = Some(Vec::new());
         }
 
         if let Some(alternates) = &mut self.alternates {
-            alternates.push(Alternate { hreflang, href });
+            alternates.push(Alternate {
+                hreflang: hreflang.to_string(),
+                href: href.to_string(),
+            });
         }
         self
     }
